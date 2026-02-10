@@ -15,6 +15,7 @@ import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import org.noear.socketd.SocketD;
@@ -23,10 +24,11 @@ import org.noear.socketd.transport.core.Listener;
 import org.noear.socketd.transport.core.Message;
 import org.noear.socketd.transport.core.Session;
 import org.noear.socketd.transport.core.entity.StringEntity;
+import org.noear.socketd.transport.core.listener.SimpleListener;
 import org.noear.socketd.transport.server.Server;
 import org.noear.socketd.transport.server.ServerConfig;
 
-@Version(2.17F)
+@Version(3.01F)
 @ShortName("xServerSockets")
 public class xServerSockets {
    private static Server socketserver;
@@ -85,10 +87,10 @@ public class xServerSockets {
    }
 
    public void Initialize(BA var1, String var2, String var3) throws IOException {
-      new xServerSockets();
+     // new xServerSockets();
       this.ba = var1;
       sk = "sd:" + var3;
-      this.eventname = var2.toLowerCase();
+      this.eventname = var2.toLowerCase();      
    }
 
    public void EnableSimpleListener(boolean var1) {
@@ -100,7 +102,7 @@ public class xServerSockets {
 
    public void EnableEventListener(boolean var1) {
       if (var1) {
-         eventListener = new xEventListener();
+         eventListener = new xEventListener(this.ba, this.eventname);
       }
 
    }
@@ -130,7 +132,7 @@ public class xServerSockets {
          }).config((var0) -> {
             ServerConfig var10000 = (ServerConfig)var0.charset(Charset.forName(chr));
          }).config((var0) -> {
-            ServerConfig var10000 = (ServerConfig)var0.requestTimeout((long)mRequestTimeout);
+            ServerConfig var10000 = (ServerConfig)var0.requestTimeout((long)mRequestTimeout);         
          }).listen(var2).start();
       } catch (IOException var4) {
          BA.LogError(var4.getMessage());
@@ -160,19 +162,42 @@ public class xServerSockets {
 
    }
 
-   public void setSSL(String var1, String var2) {
-      try {
-         KeyStore var3 = KeyStore.getInstance("JKS");
-         var3.load(new FileInputStream(var1), var2.toCharArray());
-         TrustManagerFactory var4 = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-         var4.init(var3);
-         this.mSSLContext = SSLContext.getInstance("TLS");
-         this.mSSLContext.init((KeyManager[])null, var4.getTrustManagers(), (SecureRandom)null);
-      } catch (IOException | NoSuchAlgorithmException | CertificateException | KeyManagementException | KeyStoreException var5) {
-         BA.LogError(var5.getMessage());
-      }
+   // Not yet tested
+   public void setSSL(String keystorePath, String keystorePassword) {
+    try {
+        // 1. Load KeyStore (chứa cert + private key)
+        KeyStore keyStore = KeyStore.getInstance("JKS");
+        FileInputStream fis = new FileInputStream(keystorePath);
+        keyStore.load(fis, keystorePassword.toCharArray());
+        fis.close();
 
-   }
+        // 2. KeyManager (BẮT BUỘC cho server)
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance(
+                KeyManagerFactory.getDefaultAlgorithm()
+        );
+        kmf.init(keyStore, keystorePassword.toCharArray());
+
+        // 3. TrustManager (có thể dùng cùng keystore)
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(
+                TrustManagerFactory.getDefaultAlgorithm()
+        );
+        tmf.init(keyStore);
+
+        // 4. SSLContext
+        mSSLContext = SSLContext.getInstance("TLS");
+        mSSLContext.init(
+                kmf.getKeyManagers(),
+                tmf.getTrustManagers(),
+                new SecureRandom()
+        );
+
+        BA.Log("SSL initialized successfully");
+
+    } catch (Exception e) {
+        BA.LogError("SSL init error: " + e.getMessage());
+    }
+}
+
 
    public void AddPath(String var1, String var2) {
       xEventListener var3 = new xEventListener(this.ba, var2);

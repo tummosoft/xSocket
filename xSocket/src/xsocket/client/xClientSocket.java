@@ -59,7 +59,7 @@ public class xClientSocket {
       this.sk = "sd:" + var1;
       this.clientSession = SocketD.createClient(this.sk).config((var1x) -> {
          ClientConfig var10000 = (ClientConfig)var1x.sslContext(this.mSSLContext);
-      }).listen(new xClientEvent()).open();
+      }).listen(new xClientEvent(this.ba, this.eventname)).open();
    }
 
    public void B4AConnect(String var1) {

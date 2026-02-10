@@ -1,0 +1,78 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=Layout1.bjl
+FileGroup1=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=jxui
+Library4=xsocket
+NumberOfFiles=1
+NumberOfLibraries=4
+NumberOfModules=0
+Version=10.3
+@EndOfDesignText@
+#Region Project Attributes 
+	#MainFormWidth: 600
+	#MainFormHeight: 600 
+#End Region
+
+#AdditionalJar: mysql-connector-j-8.0.31.jar
+#AdditionalJar: sqlite-jdbc-3.41.2.2.jar
+#AdditionalJar: jackson-core-2.15.2.jar
+#AdditionalJar: cpdetector-1.0.10.jar
+#AdditionalJar: jackson-databind-2.15.2.jar
+#AdditionalJar: annotations-23.0.0.jar
+#AdditionalJar: lzstring4java-0.1.jar
+#AdditionalJar: jackson-annotations-2.17.2.jar
+#AdditionalJar: socketd-2.5.20.jar
+#AdditionalJar: socketd-transport-java-kcp-2.5.20.jar
+#AdditionalJar: socketd-transport-java-tcp-2.5.20.jar
+#AdditionalJar: socketd-transport-java-udp-2.5.20.jar
+#AdditionalJar: socketd-transport-java-websocket-2.5.20.jar
+#AdditionalJar: socketd-transport-neta-2.5.20.jar
+#AdditionalJar: socketd-transport-netty-2.5.20.jar
+#AdditionalJar: socketd-transport-smartsocket-2.5.0.jar
+#AdditionalJar: slf4j-simple-2.0.11.jar
+#AdditionalJar: slf4j-api-2.0.11.jar
+#AdditionalJar: Java-WebSocket-1.5.5.jar
+#AdditionalJar: jtransc-rt-0.6.8.jar
+#AdditionalJar: aio-core-1.5.42.jar
+#AdditionalJar: aio-pro-1.5.41.jar
+
+Sub Process_Globals
+	Private fx As JFX
+	Private MainForm As Form
+	Private xui As XUI
+	Private Button1 As B4XView
+	Dim tcpSocket As xClientSocket
+  
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	MainForm = Form1
+	MainForm.RootPane.LoadLayout("Layout1")
+	MainForm.Show
+  
+	tcpSocket.Initialize("tcpSocket")
+	tcpSocket.Connect("ws://127.0.0.1:8602/?u=a&p=2")
+End Sub
+
+Sub Button1_Click
+  
+	Dim clientSession As xClientSession = tcpSocket.ClientSession
+	Log("Session=" & clientSession.sessionId)
+  
+	Dim msg As xStringEntity
+	msg.Initialize("Hello how are you")
+  
+	clientSession.sendAndSubscribe("reply",  msg)
+	
+	Dim filename as string
+  
+End Sub
+
+Sub tcpSocket_OnConnected(session As xSession)
+	Log("Session=" & session.sessionId)
+  
+End Sub

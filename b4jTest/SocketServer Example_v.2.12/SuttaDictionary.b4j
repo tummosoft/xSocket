@@ -1,0 +1,90 @@
+﻿AppType=StandardJava
+Build1=Default,com.tummosoft
+Group=Default Group
+Library1=jcore
+Library2=jfilesupport
+Library3=jserver
+Library4=jsql
+Library5=xsocket
+NumberOfFiles=0
+NumberOfLibraries=5
+NumberOfModules=0
+Version=10.3
+@EndOfDesignText@
+#Region Project Attributes 
+	#CommandLineArgs:
+	#MergeLibraries: True 
+#End Region
+
+#AdditionalJar: mysql-connector-j-8.0.31.jar
+#AdditionalJar: sqlite-jdbc-3.41.2.2.jar
+#AdditionalJar: jackson-core-2.15.2.jar
+#AdditionalJar: cpdetector-1.0.10.jar
+#AdditionalJar: jackson-databind-2.15.2.jar
+#AdditionalJar: annotations-23.0.0.jar
+#AdditionalJar: lzstring4java-0.1.jar
+#AdditionalJar: jackson-annotations-2.17.2.jar
+#AdditionalJar: socketd-2.5.20.jar
+#AdditionalJar: socketd-transport-java-kcp-2.5.20.jar
+#AdditionalJar: socketd-transport-java-tcp-2.5.20.jar
+#AdditionalJar: socketd-transport-java-udp-2.5.20.jar
+#AdditionalJar: socketd-transport-java-websocket-2.5.20.jar
+#AdditionalJar: socketd-transport-neta-2.5.20.jar
+#AdditionalJar: socketd-transport-netty-2.5.20.jar
+#AdditionalJar: socketd-transport-smartsocket-2.5.0.jar
+#AdditionalJar: slf4j-simple-2.0.11.jar
+#AdditionalJar: slf4j-api-2.0.11.jar
+#AdditionalJar: Java-WebSocket-1.5.5.jar
+#AdditionalJar: jtransc-rt-0.6.8.jar
+#AdditionalJar: aio-core-1.5.42.jar
+#AdditionalJar: aio-pro-1.5.41.jar
+
+Sub Process_Globals
+	Dim server As xServerSockets
+End Sub
+
+Sub AppStart (Args() As String)
+	'config.Initialize
+	'config = File.ReadMap(File.DirApp, "config.txt")
+	'mysql.Initialize
+  
+	server.Initialize("server", "ws")
+	server.SetCharset("UTF-8")
+	server.EnableSimpleListener(True)
+	server.RequestTimeout(5000)
+	server.Start(8602)
+      
+	StartMessageLoop
+  
+	'open browser and navigate to: http://127.0.0.1:51042/
+End Sub
+
+Sub server_OnConnected(session As xSession)
+	Log("Server connected: " & session.localAddress)
+      
+End Sub
+
+Sub server_OnMessage(session As xSession, message As xMessage)
+	Dim EntityMeta As xEntityMetas	
+	Dim fileName As String  = message.meta(EntityMeta.META_DATA_DISPOSITION_FILENAME)
+	
+	Log(fileName)
+	
+	Log(message.event)
+	Log(message.isSubscribe)
+	If message.isSubscribe Then
+		Dim msg As xMessage = message.Message
+      
+		Dim entry As xEntityDefault = msg.entity
+		Log("contet=" & entry.dataAsString)
+      
+		'entry.Initialize("And you too.")
+		'session.reply(message, entry)
+      
+	End If
+  
+End Sub
+
+Sub server_OnError(session As xSession, error As String)
+  
+End Sub

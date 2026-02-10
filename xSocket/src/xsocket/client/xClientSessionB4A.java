@@ -20,46 +20,46 @@ public class xClientSessionB4A extends AbsObjectWrapper<ClientSession> {
    }
 
    public boolean isClosing() {
-      return ((ClientSession)this.getObject()).isClosing();
+      return isClosing();
    }
 
    public String sessionId() {
-      return ((ClientSession)this.getObject()).sessionId();
+      return sessionId();
    }
 
    public SendStream send(String var1, Entity var2) throws IOException {
-      return ((ClientSession)this.getObject()).send(var1, var2);
+      return send(var1, var2);
    }
 
    public RequestStream sendAndRequest(String var1, Entity var2) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndRequest(var1, var2);
+      return sendAndRequest(var1, var2);
    }
 
    public Entity sendAndRequest2(String var1, Entity var2) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndRequest(var1, var2).await();
+      return sendAndRequest(var1, var2).await();
    }
 
    public RequestStream sendAndRequest(String var1, Entity var2, long var3) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndRequest(var1, var2, var3);
+      return sendAndRequest(var1, var2, var3);
    }
 
    public SubscribeStream sendAndSubscribe(String var1, Entity var2) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndSubscribe(var1, var2);
+      return sendAndSubscribe(var1, var2);
    }
 
    public SubscribeStream sendAndSubscribe(String var1, Entity var2, long var3) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndSubscribe(var1, var2, var3);
+      return sendAndSubscribe(var1, var2, var3);
    }
 
    public void closeStarting() throws IOException {
-      ((ClientSession)this.getObject()).closeStarting();
+     closeStarting();
    }
 
    public void close() throws IOException {
-      ((ClientSession)this.getObject()).close();
+      close();
    }
 
    public void reconnect() throws IOException {
-      ((ClientSession)this.getObject()).reconnect();
+      reconnect();
    }
 }

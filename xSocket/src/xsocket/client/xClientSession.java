@@ -20,7 +20,7 @@ public class xClientSession extends AbsObjectWrapper<ClientSession> {
    }
 
    public boolean isClosing() {
-      return ((ClientSession)this.getObject()).isClosing();
+       return ((ClientSession)this.getObject()).isClosing();
    }
 
    public String sessionId() {
@@ -28,19 +28,19 @@ public class xClientSession extends AbsObjectWrapper<ClientSession> {
    }
 
    public SendStream send(String var1, Entity var2) throws IOException {
-      return ((ClientSession)this.getObject()).send(var1, var2);
+       return ((ClientSession)this.getObject()).send(var1, var2);
    }
 
    public RequestStream sendAndRequest(String var1, Entity var2) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndRequest(var1, var2);
+       return ((ClientSession)this.getObject()).sendAndRequest(var1, var2);
    }
 
    public Entity sendAndRequest2(String var1, Entity var2) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndRequest(var1, var2).await();
+       return ((ClientSession)this.getObject()).sendAndRequest(var1, var2).await();
    }
 
    public RequestStream sendAndRequest(String var1, Entity var2, long var3) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndRequest(var1, var2, var3);
+       return ((ClientSession)this.getObject()).sendAndRequest(var1, var2, var3);
    }
 
    public SubscribeStream sendAndSubscribe(String var1, Entity var2) throws IOException {
@@ -48,11 +48,11 @@ public class xClientSession extends AbsObjectWrapper<ClientSession> {
    }
 
    public SubscribeStream sendAndSubscribe(String var1, Entity var2, long var3) throws IOException {
-      return ((ClientSession)this.getObject()).sendAndSubscribe(var1, var2, var3);
+      return sendAndSubscribe(var1, var2, var3);
    }
 
    public void closeStarting() throws IOException {
-      ((ClientSession)this.getObject()).closeStarting();
+     ((ClientSession)this.getObject()). closeStarting();
    }
 
    public void close() throws IOException {
